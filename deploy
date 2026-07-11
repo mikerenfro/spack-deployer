@@ -11,6 +11,7 @@ LIBEVENT_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' libevent-devel)
 PMIX_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' pmix-ohpc)
 SLURM_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' slurm-ohpc)
 
+echo "### Cloning/updating Spack repository"
 if [ ! -d develop ]; then
     git clone https://github.com/spack/spack.git develop
 elif [ ! -d develop/.git ]; then
@@ -36,6 +37,7 @@ else
 fi
 SPACK_HOME=$(realpath ${SPACK_VERSION})
 
+echo "### Updating site settings"
 cd site-settings
 for y in *.yaml; do
     DEST=${SPACK_HOME}/etc/spack/site/$y
@@ -55,3 +57,6 @@ for y in *.yaml; do
     fi
 done
 cd ..
+echo "### Adding OS-provided compilers to site settings"
+. ${SPACK_HOME}/share/spack/setup-env.sh
+spack compiler find --scope=site
