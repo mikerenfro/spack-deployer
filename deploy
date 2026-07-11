@@ -11,31 +11,26 @@ LIBEVENT_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' libevent-devel)
 PMIX_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' pmix-ohpc)
 SLURM_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' slurm-ohpc)
 
-echo "### Cloning/updating Spack repository"
-if [ ! -d develop ]; then
-    git clone --depth=2 https://github.com/spack/spack.git develop
-elif [ ! -d develop/.git ]; then
-    echo "develop exists, but is not a git repo, bailing out"
-    exit 1
+SPACK_TARBALL=spack-$(echo ${SPACK_VERSION} | sed 's/^v//g').tar.gz
+if [ ! -f ${SPACK_TARBALL} ]; then
+    echo "### Grabbing ${SPACK_TARBALL}"
+    curl -LO https://github.com/spack/spack/releases/download/${SPACK_VERSION}/${SPACK_TARBALL}
+else
+    echo "### ${SPACK_TARBALL} already exists, not downloading again"
 fi
 
-# develop is a git repo, make sure it's the right one
-cd develop
-ORIGIN=$(git remote get-url origin)
-if [ "${ORIGIN}" != "https://github.com/spack/spack.git" ]; then
-    echo "develop is a git repo, but points to ${ORIGIN} instead of https://github.com/spack/spack.git, bailing out"
+SPACK_HOME=$(realpath ${SPACK_VERSION})
+if [ ! -e ${SPACK_HOME} ]; then
+    echo "### ${SPACK_HOME} did not exist, making directory and extracting ${SPACK_TARBALL} into it"
+    mkdir -p ${SPACK_HOME}
+    tar --strip-components=1 -C ${SPACK_HOME} -xf spack-1.2.1.tar.gz
+elif [ -f ${SPACK_HOME}/share/spack/setup-env.sh ]; then
+    echo "### ${SPACK_HOME} does not appear to be a Spack directory, bailing out"
+    exit 1
+else
+    echo "### ${SPACK_HOME} exists, but was not a directory, bailing out"
     exit 1
 fi
-git checkout develop
-git pull
-if [ ! -d ../${SPACK_VERSION} ]; then
-    mkdir ../${SPACK_VERSION}
-    git archive ${SPACK_VERSION} | tar -C ../${SPACK_VERSION} -xf -
-else
-    echo "$(realpath ../${SPACK_VERSION}) exists, skipping git archive extraction"
-fi
-cd ..
-SPACK_HOME=$(realpath ${SPACK_VERSION})
 
 echo "### Updating site settings"
 cd site-settings
