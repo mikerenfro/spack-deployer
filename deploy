@@ -6,8 +6,6 @@ CUDA_ARCH=80
 
 # Should be little reason to mess with anything below here
 
-dnf -q -y install git gcc-gfortran gcc-c++ patch unzip yq
-
 GCC_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' gcc)
 LIBEVENT_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' libevent-devel)
 PMIX_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' pmix-ohpc)
@@ -38,7 +36,8 @@ else
 fi
 SPACK_HOME=$(realpath ${SPACK_VERSION})
 
-for y in site-settings/*.yaml; do
+cd site-settings
+for y in *.yaml; do
     DEST=${SPACK_HOME}/etc/spack/site/$y
     if [ -f ${DEST} ]; then
         echo "${DEST} already exists, not overwriting"
@@ -55,3 +54,4 @@ for y in site-settings/*.yaml; do
             ${DEST} 
     fi
 done
+cd ..

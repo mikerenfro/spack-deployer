@@ -15,3 +15,12 @@ versions) on OpenHPC 3.
 - `develop/` will contain a clone of https://github.com/spack/spack.git , develop branch
 - `packages_develop/` will contain a clone of https://github.com/spack/spack-packages.git , develop branch
 - `$tag/` will contain an extracted archive of a tag of https://github.com/spack/spack.git -- usually this is a `v[0-9]*` folder
+
+# Usage
+
+As root: `dnf -q -y install git gcc-gfortran gcc-c++ patch unzip`
+
+As a normal user:
+- clone this repository to a folder where you want to deploy Spack into
+- change directories to that folder
+- `./deploy`
