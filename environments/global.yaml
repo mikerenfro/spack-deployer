@@ -19,5 +19,6 @@ spack:
             - gcc@14
     specs:
     - gmake
+    - cuda@13.2
     - openmpi fabrics=ucx schedulers=slurm
   view: false
