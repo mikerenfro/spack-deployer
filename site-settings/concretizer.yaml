@@ -1,0 +1,6 @@
+# Check results of:
+#   spack config blame concretizer
+# to get full list of settings
+concretizer:
+  targets:
+    granularity: generic

@@ -1,0 +1,7 @@
+# Check results of
+#   spack config blame repos
+# to get full list of settings
+repos:
+  builtin:
+    branch: develop
+    destination: $spack/../packages_develop

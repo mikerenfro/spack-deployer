@@ -1,0 +1,22 @@
+# Check results of
+#   spack config blame packages
+# to get full list of settings
+packages:
+  all:
+    target: [x86_64_v3]
+    variants: +cuda cuda_arch=__CUDA_ARCH__
+  slurm:
+    externals:
+    - spec: slurm@__SLURM_VERSION_UPSTREAM__
+      prefix: /
+    buildable: false
+  pmix:
+    externals:
+    - spec: pmix@__PMIX_VERSION_UPSTREAM__
+      prefix: /opt/ohpc/admin/pmix
+    buildable: false
+  libevent:
+    externals:
+    - spec: libevent@__LIBEVENT_VERSION_UPSTREAM__
+      prefix: /usr
+    buildable: false

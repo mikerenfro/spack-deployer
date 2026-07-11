@@ -1,0 +1,17 @@
+# Check results of
+#   spack config blame modules
+# to get full list of settings
+modules:
+  default:
+    enable: [lmod]
+    lmod:
+      exclude_implicits: true
+      core_compilers:
+      - "gcc@__GCC_VERSION__"
+      include:
+      - gcc
+      exclude:
+      - "%gcc@__GCC_VERSION_UPSTREAM__"
+      hash_length: 0
+      hierarchy:
+      - python

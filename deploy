@@ -1,0 +1,57 @@
+#!/bin/bash
+
+SPACK_VERSION=v1.2.1
+GCC_VERSION=14
+CUDA_ARCH=80
+
+# Should be little reason to mess with anything below here
+
+dnf -q -y install git gcc-gfortran gcc-c++ patch unzip yq
+
+GCC_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' gcc)
+LIBEVENT_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' libevent-devel)
+PMIX_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' pmix-ohpc)
+SLURM_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' slurm-ohpc)
+
+if [ ! -d develop ]; then
+    git clone https://github.com/spack/spack.git develop
+elif [ ! -d develop/.git ];
+    echo "develop exists, but is not a git repo, bailing out"
+    exit 1
+else
+    # develop is a git repo, make sure it's the right one
+    cd develop
+    ORIGIN=$(git remote get-url origin)
+    if [ "${ORIGIN}" != "https://github.com/spack/spack.git" ]; then
+        echo "develop is a git repo, but points to ${ORIGIN} instead of https://github.com/spack/spack.git, bailing out"
+        exit 1
+    fi
+    git checkout develop
+    git pull
+    if [ ! -d ../${SPACK_VERSION} ]; then
+        mkdir ../${SPACK_VERSION}
+        git archive ${SPACK_VERSION} | tar -C ../${SPACK_VERSION} -xf -
+    else
+        echo "$(realpath ../${SPACK_VERSION}) exists, skipping git archive extraction"
+    fi
+    cd ..
+fi
+SPACK_HOME=$(realpath ${SPACK_VERSION})
+
+for y in site-settings/*.yaml; do
+    DEST=${SPACK_HOME}/etc/spack/site/$y
+    if [ -f ${DEST} ]; then
+        echo "${DEST} already exists, not overwriting"
+    else
+        /bin/cp $y ${DEST}
+        perl -pi.bak -e "
+            s/__CUDA_ARCH__/${CUDA_ARCH}/g;
+            s/__GCC_VERSION__/${GCC_VERSION}/g;
+            s/__GCC_VERSION_UPSTREAM__/${GCC_VERSION_UPSTREAM}/g;
+            s/__LIBEVENT_VERSION_UPSTREAM__/${LIBEVENT_VERSION_UPSTREAM}/g;
+            s/__PMIX_VERSION_UPSTREAM__/${PMIX_VERSION_UPSTREAM}/g;
+            s/__SLURM_VERSION_UPSTREAM__/${SLURM_VERSION_UPSTREAM}/g;
+            " \
+            ${DEST} 
+    fi
+done
