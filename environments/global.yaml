@@ -1,0 +1,30 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs:
+  - group: compiler
+    specs:
+    - gcc@14
+
+  - group: apps
+    needs: [compiler]
+    override:
+      packages:
+        c:
+          require:
+            one_of:
+              - gcc@14
+        cxx:
+          require:
+            one_of:
+              - gcc@14
+        fortran:
+          require:
+            one_of:
+              - gcc@14
+    specs:
+    - gmake
+  view: false
