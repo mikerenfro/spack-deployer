@@ -18,7 +18,12 @@ spack:
           - one_of:
             - gcc@14
     specs:
-    - gmake
     - cuda@13.2
+    - curl+libidn2
+    - gmake
+    - hdf5+cxx+fortran+hl
     - openmpi fabrics=ucx schedulers=slurm
+    - py-keras backend=torch
+    - py-matplotlib+animation+movies+fonts+latex
+    - py-torch~xnnpack+nccl cuda_arch=80
   view: false
