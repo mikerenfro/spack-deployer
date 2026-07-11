@@ -19,4 +19,5 @@ spack:
             - gcc@14
     specs:
     - gmake
+    - openmpi fabrics=ucx schedulers=slurm
   view: false
