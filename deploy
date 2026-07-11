@@ -15,7 +15,7 @@ SLURM_VERSION_UPSTREAM=$(rpm -q --queryformat '%{VERSION}' slurm-ohpc)
 
 if [ ! -d develop ]; then
     git clone https://github.com/spack/spack.git develop
-elif [ ! -d develop/.git ];
+elif [ ! -d develop/.git ]; then
     echo "develop exists, but is not a git repo, bailing out"
     exit 1
 else
