@@ -17,24 +17,24 @@ if [ ! -d develop ]; then
 elif [ ! -d develop/.git ]; then
     echo "develop exists, but is not a git repo, bailing out"
     exit 1
-else
-    # develop is a git repo, make sure it's the right one
-    cd develop
-    ORIGIN=$(git remote get-url origin)
-    if [ "${ORIGIN}" != "https://github.com/spack/spack.git" ]; then
-        echo "develop is a git repo, but points to ${ORIGIN} instead of https://github.com/spack/spack.git, bailing out"
-        exit 1
-    fi
-    git checkout develop
-    git pull
-    if [ ! -d ../${SPACK_VERSION} ]; then
-        mkdir ../${SPACK_VERSION}
-        git archive ${SPACK_VERSION} | tar -C ../${SPACK_VERSION} -xf -
-    else
-        echo "$(realpath ../${SPACK_VERSION}) exists, skipping git archive extraction"
-    fi
-    cd ..
 fi
+
+# develop is a git repo, make sure it's the right one
+cd develop
+ORIGIN=$(git remote get-url origin)
+if [ "${ORIGIN}" != "https://github.com/spack/spack.git" ]; then
+    echo "develop is a git repo, but points to ${ORIGIN} instead of https://github.com/spack/spack.git, bailing out"
+    exit 1
+fi
+git checkout develop
+git pull
+if [ ! -d ../${SPACK_VERSION} ]; then
+    mkdir ../${SPACK_VERSION}
+    git archive ${SPACK_VERSION} | tar -C ../${SPACK_VERSION} -xf -
+else
+    echo "$(realpath ../${SPACK_VERSION}) exists, skipping git archive extraction"
+fi
+cd ..
 SPACK_HOME=$(realpath ${SPACK_VERSION})
 
 echo "### Updating site settings"
