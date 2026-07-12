@@ -12,6 +12,8 @@ spack:
   - group: apps
     needs: [compiler]
     override:
+      concretizer:
+        unify: when_possible
       packages:
         all:
           require:
