@@ -23,7 +23,9 @@ spack:
     - gmake
     - hdf5+cxx+fortran+hl
     - openmpi fabrics=ucx schedulers=slurm
+    - py-keras backend=tensorflow
     - py-keras backend=torch
     - py-matplotlib+animation+movies+fonts+latex
+    - py-tensorflow+mkl+mpi
     - py-torch~xnnpack+nccl cuda_arch=80
   view: false
