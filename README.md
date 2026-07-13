@@ -17,7 +17,7 @@ versions) on OpenHPC 3.
 
 # Usage
 
-As root: `dnf -q -y install git gcc-gfortran gcc-c++ patch unzip`
+As root: `dnf -y install git gcc-gfortran gcc-c++ patch unzip`
 
 As a normal user:
 - clone this repository to a folder where you want to deploy Spack into
