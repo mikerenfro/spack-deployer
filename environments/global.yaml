@@ -7,7 +7,18 @@ spack:
   specs:
   - group: compiler
     specs:
-    - gcc@14
+    - gcc@13 +nvptx ^cuda@12.9
+    override:
+      packages:
+        c:
+          prefer:
+          - gcc@11
+        cxx:
+          prefer:
+          - gcc@11
+        fortran:
+          prefer:
+          - gcc@11
 
   - group: apps
     needs: [compiler]
@@ -15,19 +26,29 @@ spack:
       concretizer:
         unify: when_possible
       packages:
-        all:
-          require:
-          - one_of:
-            - gcc@14
+        c:
+          prefer:
+          - gcc@13+nvptx
+        cxx:
+          prefer:
+          - gcc@13+nvptx
+        fortran:
+          prefer:
+          - gcc@13+nvptx
     specs:
-    - cuda@13.2
-    - curl+libidn2
+    - curl +libidn2
     - gmake
-    - hdf5+cxx+fortran+hl
+    - hdf5 +cxx+fortran+hl
     - openmpi fabrics=ucx schedulers=slurm
-    - py-keras backend=tensorflow
-    - py-keras backend=torch
-    - py-matplotlib+animation+movies+fonts+latex
-    - py-tensorflow+mkl+mpi
-    - py-torch~xnnpack+nccl cuda_arch=80
+    - py-gpytorch
+    - py-keras backend=torch ^py-torch@2
+    - py-matplotlib@3.11 +animation+fonts+latex+movies
+    - py-pytorch-lightning ^py-torch@2
+    - py-torch@2 +nccl~xnnpack
+    - py-torch-geometric ^py-torch@2
+    - py-torch-scatter ^py-torch@2
+    - py-torchaudio ^py-torch@2
+    - py-torchmetrics +detection+image ^py-torch@2
+    - py-torchvision +ffmpeg+nvjpeg+video_codec+webp ^py-torch@2
+
   view: false
