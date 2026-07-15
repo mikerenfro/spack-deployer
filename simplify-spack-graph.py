@@ -31,6 +31,13 @@ for l in updated_lines:
     if m:
         glibc_hash = m.groups()[0]
         break
+# Find the compiler-wrapper hash so we cna remove all nodes/edges referencing it
+compiler_wrapper_pattern = r'"(\w*)" \[label="compiler-wrapper@.*'
+for l in updated_lines:
+    m = re.search(compiler_wrapper_pattern, l)
+    if m:
+        compiler_wrapper_hash = m.groups()[0]
+        break
 # Find all gcc-runtime hashes so we can remove all nodes/edges referencing them
 gcc_runtime_pattern = r'"(\w*)" \[label="gcc-runtime@.*'
 gcc_runtime_hashes = []
@@ -45,8 +52,8 @@ for l in updated_lines:
 updated_lines2 = []
 for l in updated_lines:
     hash_absent = True
-    if glibc_hash not in l:
-        for hash in gcc_runtime_hashes:
+    if (glibc_hash not in l) and (compiler_wrapper_hash not in l):
+         for hash in gcc_runtime_hashes:
             if hash in l:
                 hash_absent = False
                 break
