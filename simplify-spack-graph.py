@@ -53,7 +53,7 @@ updated_lines2 = []
 for l in updated_lines:
     hash_absent = True
     if (glibc_hash not in l) and (compiler_wrapper_hash not in l):
-         for hash in gcc_runtime_hashes:
+        for hash in gcc_runtime_hashes:
             if hash in l:
                 hash_absent = False
                 break
