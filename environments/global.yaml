@@ -46,6 +46,7 @@ spack:
     - hdf5 +cxx+fortran+hl cxxstd=11
     - hdf5 +cxx+fortran+hl cxxstd=17
     - openmpi fabrics=ucx schedulers=slurm
+    - texlive
 
   - group: apps
     needs: [core-dependencies]
