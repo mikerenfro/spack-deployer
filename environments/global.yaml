@@ -20,7 +20,7 @@ spack:
           prefer:
           - gcc@11
 
-  - group: apps
+  - group: core-dependencies
     needs: [compiler]
     override:
       concretizer:
@@ -36,10 +36,46 @@ spack:
           prefer:
           - gcc@13+nvptx
     specs:
+    - binutils
+    - boost +atomic+chrono+date_time+exception+filesystem+graph+icu+iostreams+locale+log+math+mpi+program_options+random+regex+serialization~signals2+system+test+thread+timer+wave cxxstd=11
+    - boost +atomic+chrono+date_time+exception+filesystem+graph+icu+iostreams+locale+log+math+mpi+program_options+random+regex+serialization~signals2+system+test+thread+timer+wave cxxstd=17
+    - cuda@12.9
+    - cudnn
     - curl +libidn2
     - gmake
-    - hdf5 +cxx+fortran+hl
+    - hdf5 +cxx+fortran+hl cxxstd=11
+    - hdf5 +cxx+fortran+hl cxxstd=17
     - openmpi fabrics=ucx schedulers=slurm
+
+  - group: apps
+    needs: [core-dependencies]
+    override:
+      concretizer:
+        unify: when_possible
+      packages:
+        c:
+          prefer:
+          - gcc@13+nvptx
+        cxx:
+          prefer:
+          - gcc@13+nvptx
+        fortran:
+          prefer:
+          - gcc@13+nvptx
+    specs:
+    - admixtools ^openblas
+    - apptainer
+    - bismark
+    - blast2go
+    - braker
+    - busco@5 ^metaeuk@7 ^py-biopython@1.86 ^augustus ^suite-sparse+openmp ^openblas ^py-matplotlib@3.11.0+animation+fonts+latex+movies
+    - canu
+    - circos
+    - clustal-omega
+    - cowsay
+    - damask
+    - dealii ^trilinos+cuda_constexpr+hdf5+openmp+suite-sparse+wrapper ^kokkos+cuda_constexpr+cuda_lambda+cuda_uvm+openmp+serial+wrapper ^petsc +fftw+hdf5+kokkos+openmp+suite-sparse ^sundials+kokkos+kokkos-kernels+openmp+petsc+trilinos ^suite-sparse+openmp ^openmpi schedulers=slurm fabrics=ucx
+    - dos2unix
     - py-gpytorch
     - py-keras backend=torch ^py-torch@2
     - py-matplotlib@3.11 +animation+fonts+latex+movies
@@ -48,6 +84,7 @@ spack:
     - py-torch-geometric ^py-torch@2
     - py-torch-scatter ^py-torch@2
     - py-torchaudio ^py-torch@2
+    - py-torchgeo ^py-torch@2
     - py-torchmetrics +detection+image ^py-torch@2
     - py-torchvision +ffmpeg+nvjpeg+video_codec+webp ^py-torch@2
 
