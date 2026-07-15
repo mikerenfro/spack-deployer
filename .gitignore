@@ -2,3 +2,4 @@
 /packages_develop
 spack-[0-9]*.tar.gz
 /v[0-9]*
+/.vagrant
