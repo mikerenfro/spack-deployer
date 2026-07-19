@@ -15,7 +15,7 @@
 
 # Other notes on graphs
 # edge colors are -- build: dodgerblue, link: crimson, run: goldenrod
-# node colors are -- build_dependencies: fillcolor=coral
+# node fill colors are -- build_dependencies: coral
 import re
 import sys
 
