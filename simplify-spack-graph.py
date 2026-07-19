@@ -4,7 +4,7 @@
 #
 # 1. gcc-runtime and glibc nodes are very busy, and rarely useful, so
 #    they're removed.
-# 2. Node labels are simplified, removing the hash ahd the compiler.
+# 2. Node labels are simplified, removing the hash and the compiler.
 #
 # This greatly improves readability of the remaining graph elements:
 # when processed through "dot -Tpdf", the page size for wireshark's
@@ -13,6 +13,9 @@
 #
 # Usage: simplify-spack-graph.py < file.dot | open -f -a Preview
 
+# Other notes on graphs
+# edge colors are -- build: dodgerblue, link: crimson, run: goldenrod
+# node colors are -- build_dependencies: fillcolor=coral
 import re
 import sys
 
@@ -33,6 +36,7 @@ for l in updated_lines:
         break
 # Find the compiler-wrapper hash so we cna remove all nodes/edges referencing it
 compiler_wrapper_pattern = r'"(\w*)" \[label="compiler-wrapper@.*'
+compiler_wrapper_hash = None # if we graph only with "run,link" edge types, we never see compiler-wrapper
 for l in updated_lines:
     m = re.search(compiler_wrapper_pattern, l)
     if m:
@@ -52,7 +56,7 @@ for l in updated_lines:
 updated_lines2 = []
 for l in updated_lines:
     hash_absent = True
-    if (glibc_hash not in l) and (compiler_wrapper_hash not in l):
+    if (glibc_hash not in l) and (str(compiler_wrapper_hash) not in l):
         for hash in gcc_runtime_hashes:
             if hash in l:
                 hash_absent = False
